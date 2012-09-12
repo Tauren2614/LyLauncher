@@ -99,10 +99,18 @@
 		</PreferenceCategory>
 		<PreferenceCategory
             android:title="@string/pref_title_drawer_visuals_preferencecategory">
+<!--modify by Tauren 20120912 for ADW_00000001 start -->
+			<CheckBoxPreference android:title="@string/pref_title_animated_drawer"
+				android:defaultValue="false"
+				android:summary="@string/pref_summary_animated_drawer"
+				android:key="drawerAnimated" />
+<!--
 			<CheckBoxPreference android:title="@string/pref_title_animated_drawer"
 				android:defaultValue="true"
 				android:summary="@string/pref_summary_animated_drawer"
 				android:key="drawerAnimated" />
+-->
+<!--modify by Tauren 20120912 end-->
 			<com.android.lylauncher.DialogSeekBarPreference
 				android:dependency="drawerAnimated"
 				android:title="@string/pref_title_zoom_effect_speed"
