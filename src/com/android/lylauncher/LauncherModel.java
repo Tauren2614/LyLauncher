@@ -46,6 +46,13 @@ import android.content.res.XmlResourceParser;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+//[add by Tauren 20120912 for ADW_00000002 start]
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.PixelFormat;
+import android.graphics.RectF;
+//[add by Tauren 20120912 for ADW_00000002 end]
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -1595,6 +1602,40 @@ public class LauncherModel {
                 LauncherSettings.Favorites.CONTAINER + "=" + info.id, null);
     }
 
+//[add by Tauren 20120912 for ADW_00000002 start]
+    /**
+     * 给图标添加背景
+     */
+    static Drawable drawBackground(Context context,Drawable bg){
+    	final Resources resources=context.getResources();
+    	int iconHeight;
+    	int iconWidth = iconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+
+        Canvas sCanvas = new Canvas();
+        sCanvas.setDrawFilter(new PaintFlagsDrawFilter(Paint.DITHER_FLAG,Paint.FILTER_BITMAP_FLAG)); 
+       
+        final Rect sOldBounds = new Rect();
+        final Bitmap.Config c = bg.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
+        final Bitmap thumb = Bitmap.createBitmap(iconWidth, iconHeight, c);
+        final Canvas canvas = sCanvas;
+
+        canvas.setBitmap(thumb);
+        sOldBounds.set(bg.getBounds());
+        Paint paint=new Paint();
+        paint.setAntiAlias(true);
+        paint.setARGB(180, 0, 178, 238);//背景颜色
+        paint.setStyle(Paint.Style.FILL);
+        RectF re11=new RectF(0,0,iconWidth,iconHeight);
+        canvas.drawRoundRect(re11, 15,15, paint);
+
+        bg.setBounds(5, 5, iconWidth-5, iconHeight-5);    
+        bg.draw(canvas);
+        bg.setBounds(sOldBounds);
+		
+        return (new FastBitmapDrawable(thumb));
+    }
+//[add by Tauren 20120912 for ADW_00000002 end]
+
     /**
      * Get an the icon for an activity
      * Accounts for theme and icon shading
@@ -1648,7 +1689,10 @@ public class LauncherModel {
                 icon = Utilities.createIconThumbnail(icon, context);
             }
         }
-        return icon;
+//[modify by Tauren 20120912 for ADW_00000002 start]        
+        return drawBackground(context,icon);
+//        return icon;
+//[modify by Tauren 20120912 for ADW_00000002 end]
     }
     /**
      * Resize an item in the DB to a new <container, screen, cellX, cellY>
