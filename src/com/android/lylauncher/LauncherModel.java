@@ -54,6 +54,7 @@ import android.graphics.PixelFormat;
 import android.graphics.RectF;
 //[add by Tauren 20120912 for ADW_00000002 end]
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Process;
@@ -1606,7 +1607,7 @@ public class LauncherModel {
     /**
      * 给图标添加背景
      */
-    static Drawable drawBackground(Context context,Drawable bg){
+    static Drawable drawBackground(Context context,Drawable bg, String packageManagerName){
     	final Resources resources=context.getResources();
     	int iconHeight;
     	int iconWidth = iconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
@@ -1622,11 +1623,15 @@ public class LauncherModel {
         canvas.setBitmap(thumb);
         sOldBounds.set(bg.getBounds());
         Paint paint=new Paint();
-        paint.setAntiAlias(true);
-        paint.setARGB(180, 0, 178, 238);//背景颜色
-        paint.setStyle(Paint.Style.FILL);
-        RectF re11=new RectF(0,0,iconWidth,iconHeight);
-        canvas.drawRoundRect(re11, 15,15, paint);
+        //paint.setAntiAlias(true);
+        //paint.setARGB(180, 0, 178, 238);//背景颜色
+        //paint.setStyle(Paint.Style.FILL);
+        //RectF re11=new RectF(0,0,iconWidth,iconHeight);
+        //canvas.drawRoundRect(re11, 15,15, paint);
+        int sourceId = AlmostNexusSettingsHelper.getMainMenuIconBg(context, packageManagerName);
+        BitmapDrawable bgIcon = (BitmapDrawable)context.getResources().getDrawable(sourceId);
+        bgIcon.setBounds(0,0,iconWidth,iconHeight);
+        bgIcon.draw(canvas);
 
         bg.setBounds(5, 5, iconWidth-5, iconHeight-5);    
         bg.draw(canvas);
@@ -1690,7 +1695,7 @@ public class LauncherModel {
             }
         }
 //[modify by Tauren 20120912 for ADW_00000002 start]        
-        return drawBackground(context,icon);
+        return drawBackground(context,icon,activityInfo.packageName);
 //        return icon;
 //[modify by Tauren 20120912 for ADW_00000002 end]
     }

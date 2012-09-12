@@ -23,6 +23,105 @@ public final class AlmostNexusSettingsHelper {
 		"highlights_color_focus","uiNewSelectors","desktopRows","desktopColumns","autosizeIcons","uiDesktopIndicatorType",
 		"screenCache","uiDesktopIndicator","themePackageName","themeIcons", "notif_size","drawer_style"};
 
+	//[add by Tauren 20120912 for ADW_00000002 start]
+	private static final int mMainMenuIconBgSourceIds[] = {
+		R.drawable.mainmenu_bg0000,
+		R.drawable.mainmenu_bg0001,
+		R.drawable.mainmenu_bg0002,
+		R.drawable.mainmenu_bg0003,
+		R.drawable.mainmenu_bg0004,
+		R.drawable.mainmenu_bg0005,
+		R.drawable.mainmenu_bg0006,
+		R.drawable.mainmenu_bg0007,
+		R.drawable.mainmenu_bg0008,
+		R.drawable.mainmenu_bg0009,
+		R.drawable.mainmenu_bg0010,
+		R.drawable.mainmenu_bg0011,
+		R.drawable.mainmenu_bg0012,
+		R.drawable.mainmenu_bg0013,
+		R.drawable.mainmenu_bg0014,
+		R.drawable.mainmenu_bg0015,
+		R.drawable.mainmenu_bg0016,
+		R.drawable.mainmenu_bg0017,
+		R.drawable.mainmenu_bg0018,
+		R.drawable.mainmenu_bg0019,
+		R.drawable.mainmenu_bg0020,
+		R.drawable.mainmenu_bg0021,
+		R.drawable.mainmenu_bg0022,
+		R.drawable.mainmenu_bg0023,
+		R.drawable.mainmenu_bg0024,
+		R.drawable.mainmenu_bg0025,
+		R.drawable.mainmenu_bg0026,
+		R.drawable.mainmenu_bg0027,
+		R.drawable.mainmenu_bg0028,
+		R.drawable.mainmenu_bg0029,
+		R.drawable.mainmenu_bg0030,
+		R.drawable.mainmenu_bg0031,
+		R.drawable.mainmenu_bg0032,
+		R.drawable.mainmenu_bg0033,
+		R.drawable.mainmenu_bg0034,
+		R.drawable.mainmenu_bg0035,
+		R.drawable.mainmenu_bg0036,
+		R.drawable.mainmenu_bg0037,
+		R.drawable.mainmenu_bg0038,
+		R.drawable.mainmenu_bg0039,
+		R.drawable.mainmenu_bg0040,
+		R.drawable.mainmenu_bg0041,
+		R.drawable.mainmenu_bg0042,
+		R.drawable.mainmenu_bg0043,
+		R.drawable.mainmenu_bg0044,
+		R.drawable.mainmenu_bg0045,
+		R.drawable.mainmenu_bg0046,
+		R.drawable.mainmenu_bg0047,
+		R.drawable.mainmenu_bg0048,
+		R.drawable.mainmenu_bg0049,
+		R.drawable.mainmenu_bg0050,
+		R.drawable.mainmenu_bg0051,
+		R.drawable.mainmenu_bg0052,
+		R.drawable.mainmenu_bg0053,
+		R.drawable.mainmenu_bg0054,
+		R.drawable.mainmenu_bg0055,
+		R.drawable.mainmenu_bg0056,
+		R.drawable.mainmenu_bg0057,
+		R.drawable.mainmenu_bg0058,
+		R.drawable.mainmenu_bg0059,
+		R.drawable.mainmenu_bg0060,
+		R.drawable.mainmenu_bg0061,
+		R.drawable.mainmenu_bg0062,
+		R.drawable.mainmenu_bg0063,
+		R.drawable.mainmenu_bg0064,
+		R.drawable.mainmenu_bg0065
+	};
+	
+	public static int getMainMenuIconBgListPoint(Context context) {
+		SharedPreferences sp = context.getSharedPreferences("MainMenuIconBg", Context.MODE_PRIVATE);
+		int bgpoint = sp.getInt("mainmenuiconbglistpoint", 0);
+		
+		SharedPreferences.Editor editor = sp.edit();
+		editor.putInt("mainmenuiconbglistpoint", bgpoint+1);
+	    editor.commit();
+	    
+		return bgpoint;
+	}
+	
+	public static int getMainMenuIconBg(Context context, String packageName)
+	{
+		SharedPreferences sp = context.getSharedPreferences("MainMenuIconBg", Context.MODE_PRIVATE);
+		int bgpoint = sp.getInt(packageName, -1);
+		if(bgpoint < 0){
+			bgpoint = getMainMenuIconBgListPoint(context);
+			
+		    SharedPreferences.Editor editor = sp.edit();
+			editor.putInt(packageName, bgpoint);
+		    editor.commit();
+		}
+		if((bgpoint < 0) || (bgpoint > mMainMenuIconBgSourceIds.length - 1)){
+			bgpoint = 0;
+		}
+	    return mMainMenuIconBgSourceIds[bgpoint];
+	}
+	//[add by Tauren 20120912 for ADW_00000002 end]
+
 	public static boolean needsRestart(String key){
 		for(int i=0;i<restart_keys.length;i++){
 			if(restart_keys[i].equals(key))
