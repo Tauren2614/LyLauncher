@@ -69,6 +69,9 @@ public class FolderIcon extends BubbleTextView implements DropTarget {
         		dopen = tmpIcon2;
         	}
         }
+      //[add by Tauren 20120912 for ADW_00000002 start]   
+        dclosed =  LauncherModel.drawBackground(launcher, dclosed, folderInfo.toString());
+      //[add by Tauren 20120912 for ADW_00000002 end]
         icon.mCloseIcon=Utilities.createIconThumbnail(dclosed, launcher);
         icon.mOpenIcon=dopen;
         /*final Resources resources = launcher.getResources();

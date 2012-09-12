@@ -101,7 +101,10 @@ public class ActivityPickerActivity extends ExpandableListActivity {
         public MyExpandableListAdapter(List<PackageInfo> g) {
 			super();
 			groups=g;
-            leftPadding=getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
+			//[midufy by Tauren 20120912 for ADW_00000003 start]
+			leftPadding=getResources().getDimensionPixelSize(R.dimen.app_icon_size);
+            //leftPadding=getResources().getDimensionPixelSize(android.R.dimen.app_icon_size);
+            //[midufy by Tauren 20120912 for ADW_00000003 end]
 
             lpGroup = new AbsListView.LayoutParams(
                     ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

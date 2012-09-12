@@ -115,7 +115,10 @@ public class CustomShirtcutActivity extends Activity implements OnClickListener 
 		btOk.setOnClickListener(this);
 		edLabel=(EditText) findViewById(R.id.shirtcut_label);
 		mPackageManager=getPackageManager();
-		mIconSize=(int) getResources().getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 start]
+		mIconSize=(int) getResources().getDimension(R.dimen.app_icon_size);
+		//mIconSize=(int) getResources().getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 end]
 		loadFromAppInfo(getAppInfo());
 	}
 

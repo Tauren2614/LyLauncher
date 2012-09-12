@@ -1610,7 +1610,10 @@ public class LauncherModel {
     static Drawable drawBackground(Context context,Drawable bg, String packageManagerName){
     	final Resources resources=context.getResources();
     	int iconHeight;
-    	int iconWidth = iconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 start]
+		int iconWidth = iconHeight = (int) resources.getDimension(R.dimen.app_icon_size);
+    	//int iconWidth = iconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 start]
 
         Canvas sCanvas = new Canvas();
         sCanvas.setDrawFilter(new PaintFlagsDrawFilter(Paint.DITHER_FLAG,Paint.FILTER_BITMAP_FLAG)); 

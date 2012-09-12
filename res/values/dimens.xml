@@ -23,5 +23,8 @@
     <dimen name="desktop_paginator_padding">10dip</dimen>
     <dimen name="color_picker_center">90dip</dimen>
     <dimen name="color_picker_radius">30dip</dimen>
-    <dimen name="counter_circle_padding">3dip</dimen>    
+    <dimen name="counter_circle_padding">3dip</dimen> 
+<!--add by Tauren 20120912 for ADW_00000003 start-->
+    <dimen name="app_icon_size">52dip</dimen>
+<!--add by Tauren 20120912 for ADW_00000003 end-->      
 </resources>

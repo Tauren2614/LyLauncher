@@ -24,13 +24,20 @@
     android:paddingLeft="10dip"
 
     android:orientation="horizontal">
-
+<!--modify by Tauren 20120912 for ADW_00000003 start]-->
+    <ImageView android:id="@+id/icon"
+        android:layout_width="@dimen/app_icon_size"
+        android:layout_height="@dimen/app_icon_size"
+        android:layout_gravity="center_vertical"
+        android:scaleType="fitCenter" />
+<!--
     <ImageView android:id="@+id/icon"
         android:layout_width="@android:dimen/app_icon_size"
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_gravity="center_vertical"
         android:scaleType="fitCenter" />
-
+-->
+<!--modidufy by Tauren 20120912 for ADW_00000003 end]-->
     <LinearLayout
         android:layout_width="0dip"
         android:layout_weight="1.0"

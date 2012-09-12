@@ -45,6 +45,9 @@ public class LiveFolderIcon extends FolderIcon {
                     resources.getDrawable(R.drawable.ic_launcher_folder), launcher);
             folderInfo.filtered = true;
         }
+        //[add by Tauren 20120912 for ADW_00000002 start]   
+        d =  LauncherModel.drawBackground(launcher, d, folderInfo.toString());
+        //[add by Tauren 20120912 for ADW_00000002 end]
         icon.setCompoundDrawablesWithIntrinsicBounds(null, d, null, null);
         if(!AlmostNexusSettingsHelper.getUIHideLabels(launcher))icon.setText(folderInfo.title);
         icon.setTag(folderInfo);

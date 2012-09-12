@@ -68,7 +68,10 @@ final class Utilities {
     static Drawable createIconThumbnail(Drawable icon, Context context) {
         if (sIconWidth == -1) {
             final Resources resources = context.getResources();
-            sIconWidth = sIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+			//[modify by Tauren 20120912 for ADW_00000003 start]
+			sIconWidth = sIconHeight = (int) resources.getDimension(R.dimen.app_icon_size);
+            //sIconWidth = sIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+			//[modify by Tauren 20120912 for ADW_00000003 end]
         }
 
         int width = sIconWidth;
@@ -151,8 +154,11 @@ final class Utilities {
     static Bitmap createBitmapThumbnail(Bitmap bitmap, Context context) {
         if (sIconWidth == -1) {
             final Resources resources = context.getResources();
-            sIconWidth = sIconHeight = (int) resources.getDimension(
-                    android.R.dimen.app_icon_size);
+			//[modify by Tauren 20120912 for ADW_00000003 start]
+			sIconWidth = sIconHeight = (int) resources.getDimension(R.dimen.app_icon_size);
+            //sIconWidth = sIconHeight = (int) resources.getDimension(
+            //        android.R.dimen.app_icon_size);
+			//[modify by Tauren 20120912 for ADW_00000003 end]
         }
 
         int width = sIconWidth;
@@ -208,7 +214,10 @@ final class Utilities {
      */
     static Drawable drawReflection(Drawable icon,Context context){
     	final Resources resources=context.getResources();
-    	sIconWidth = sIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 start]
+		sIconWidth = sIconHeight = (int) resources.getDimension(R.dimen.app_icon_size);
+    	//sIconWidth = sIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 end]
     	//The gap we want between the reflection and the original image
         final float scale=1.30f;
       
@@ -288,7 +297,10 @@ final class Utilities {
      */
     static Drawable scaledDrawable(Drawable icon,Context context, boolean tint, float scale, int color){
         final Resources resources=context.getResources();
-    	sIconWidth = sIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 start]
+		sIconWidth = sIconHeight = (int) resources.getDimension(R.dimen.app_icon_size);
+    	//sIconWidth = sIconHeight = (int) resources.getDimension(android.R.dimen.app_icon_size);
+		//[modify by Tauren 20120912 for ADW_00000003 end]
       
         int width = sIconWidth;
         int height = sIconHeight;
