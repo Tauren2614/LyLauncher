@@ -35,7 +35,10 @@ import android.widget.AdapterView.OnItemLongClickListener;
 public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> implements OnItemClickListener, OnItemLongClickListener, DragSource, Drawer{// implements DragScroller{
     private static final int DEFAULT_SCREEN = 0;
     private static final int INVALID_SCREEN = -1;
-    private static final int SNAP_VELOCITY = 1000;
+    //[modify by Tauren 20120912 for ADW_00000004 start]
+    private static final int SNAP_VELOCITY = 100;
+    //private static final int SNAP_VELOCITY = 1000;
+  //[modify by Tauren 20120912 for ADW_00000004 end]
 
     private int mCurrentScreen;
     private int mTotalScreens;
