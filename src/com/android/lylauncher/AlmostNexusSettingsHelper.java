@@ -97,6 +97,9 @@ public final class AlmostNexusSettingsHelper {
 		SharedPreferences sp = context.getSharedPreferences("MainMenuIconBg", Context.MODE_PRIVATE);
 		int bgpoint = sp.getInt("mainmenuiconbglistpoint", 0);
 		
+		if((bgpoint < 0) || (bgpoint > mMainMenuIconBgSourceIds.length - 1)){
+			bgpoint = 0;
+		}
 		SharedPreferences.Editor editor = sp.edit();
 		editor.putInt("mainmenuiconbglistpoint", bgpoint+1);
 	    editor.commit();

@@ -70,7 +70,7 @@ public class FolderIcon extends BubbleTextView implements DropTarget {
         	}
         }
       //[add by Tauren 20120912 for ADW_00000002 start]   
-        dclosed =  LauncherModel.drawBackground(launcher, dclosed, folderInfo.toString());
+        dclosed =  LauncherModel.drawBackground(launcher, dclosed, "FolderIcon"+String.valueOf(folderInfo.id));
       //[add by Tauren 20120912 for ADW_00000002 end]
         icon.mCloseIcon=Utilities.createIconThumbnail(dclosed, launcher);
         icon.mOpenIcon=dopen;
