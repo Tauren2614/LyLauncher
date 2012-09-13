@@ -3580,7 +3580,16 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		        mRAB2.setNextFocusUpId(R.id.drag_layer);
 		        mRAB2.setNextFocusLeftId(R.id.all_apps_view);
 			}else{
-			    int dockSize=(mDockStyle!=DOCK_STYLE_NONE)?mDrawerToolbar.getMeasuredHeight():0;
+				//[modify by Tauren 20120913 for ADW_00000007 start]
+				int dockSize = 0;
+				if(null != mDesktopIndicator){
+					dockSize=(mDockStyle!=DOCK_STYLE_NONE)?mDrawerToolbar.getMeasuredHeight()+mDesktopIndicator.getMeasuredHeight():0;
+				}
+				else{
+					dockSize=(mDockStyle!=DOCK_STYLE_NONE)?mDrawerToolbar.getMeasuredHeight():0;
+				}
+			    //int dockSize=(mDockStyle!=DOCK_STYLE_NONE)?mDrawerToolbar.getMeasuredHeight():0;
+			  //[modify by Tauren 20120913 for ADW_00000007 end]
                 if(dockSize!=appDrawerPadding){
                     appDrawerPadding=dockSize;
                     mAllAppsGrid.setPadding(0, 0, 0, appDrawerPadding);
