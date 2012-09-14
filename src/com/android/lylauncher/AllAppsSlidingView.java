@@ -9,6 +9,8 @@ import com.android.lylauncher.HolderLayout.OnFadingListener;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -18,6 +20,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -38,8 +41,12 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
     //[modify by Tauren 20120912 for ADW_00000004 start]
     private static final int SNAP_VELOCITY = 100;
     //private static final int SNAP_VELOCITY = 1000;
-  //[modify by Tauren 20120912 for ADW_00000004 end]
-
+    //[modify by Tauren 20120912 for ADW_00000004 end]
+    //[modify by Tauren 20120912 for ADW_00000008 start]
+    private static final boolean MMI_FEATURE_MAINMENU_LOOP_SLIDE = true;
+    private boolean mIsSlideLeft = false;
+    private boolean mIsSlideRight = false;
+    //[modify by Tauren 20120912 for ADW_00000008 end]
     private int mCurrentScreen;
     private int mTotalScreens;
     private int mCurrentHolder=1;
@@ -248,6 +255,14 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
         if(mLayoutMode==LAYOUT_SCROLLING){
 			final int screenWidth = mPageWidth;
 	        final int whichScreen = (getScrollX() + (screenWidth / 2)) / screenWidth;
+	      //[modify by Tauren 20120912 for ADW_00000008 start]
+	        if((0 == mCurrentScreen)&&((mTotalScreens-1) == mNextScreen)
+        			||((mTotalScreens-1) == mCurrentScreen)&&(0 == mNextScreen)){
+	        	mScrollToScreen=mNextScreen;
+	        	mPager.setCurrentItem(whichScreen);
+	        	return;
+	        }
+	      //[modify by Tauren 20120912 for ADW_00000008 end]
 	        if(whichScreen!=mScrollToScreen){
 	        	if(mScrollToScreen!=INVALID_POSITION){
 	        		addRemovePages(mScrollToScreen, whichScreen);
@@ -264,12 +279,73 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
             scrollTo(mScroller.getCurrX(),mScroller.getCurrY());
             postInvalidate();
         } else if (mNextScreen != INVALID_SCREEN) {
+        	//[modify by Tauren 20120912 for ADW_00000008 start]
+        	if(MMI_FEATURE_MAINMENU_LOOP_SLIDE){
+        		//Log.d("Taurenlog","mCurrentScreen:"+mCurrentScreen+"  mNextScreen:"+mNextScreen+"  mTotalScreens:"+mTotalScreens);
+	        	if((0 == mCurrentScreen)&&((mTotalScreens-1) == mNextScreen)
+	        			||((mTotalScreens-1) == mCurrentScreen)&&(0 == mNextScreen)){
+		            mCurrentScreen = mNextScreen;
+		            mPager.setCurrentItem(mCurrentScreen);            	
+					
+		        	scrollTo(mCurrentScreen*mPageWidth,0);
+		        	//Log.d("Taurenlog","mCurrentScreen*mPageWidth:"+mCurrentScreen*mPageWidth);
+		        	postInvalidate();
+	        	}
+        	}
+        	//[modify by Tauren 20120912 for ADW_00000008 end]
         	mNextScreen = INVALID_SCREEN;
         	mLayoutMode=LAYOUT_NORMAL;
         	findCurrentHolder();
         }
     }
+	//[modify by Tauren 20120912 for ADW_00000008 start]
+    private Bitmap mFirstScreemBitmap = null;
+    private Bitmap mLastScreemBitmap = null;
+    //private int mPreChildCount = 0;
+    private void fillerLoopSlideBitmap(){
+    	
+    	View h = null,h2=null;
+        int lastPaine = mTotalScreens - 1;
+        //Log.d("Taurenlog","lastPaine:"+lastPaine);
+    	for(int i=1;i<getChildCount();i++){
+    		if(getChildAt(i).getTag().equals(0)){
+    			h = (View) getChildAt(i);
+    			//Log.d("Taurenlog","h:"+i);
+    		}
+    		if(getChildAt(i).getTag().equals(lastPaine)){
+    			h2 = (View) getChildAt(i);
+    			//Log.d("Taurenlog","h2:"+i);
+    		}
+    		if((null != h) && (null != h2)){
+    			break;
+    		}
+    	}
+    	
+		
+		if(h!=null && h instanceof View){
+	    	if(null != mFirstScreemBitmap){
+	    		mFirstScreemBitmap.recycle();
+	    	}
+			h.setDrawingCacheEnabled(true);     				      
+			h.buildDrawingCache();    			         
+			mFirstScreemBitmap = Bitmap.createBitmap(h.getDrawingCache());
+			h.setDrawingCacheEnabled(false);  
+			//Log.d("Taurenlog","mFirstScreemBitmap new");
+		} 
+    	
 
+    	if(h2!=null && h2 instanceof View){
+    		if(null != mLastScreemBitmap){
+    			mLastScreemBitmap.recycle();
+	    	}
+    		h2.setDrawingCacheEnabled(true);     				      
+            h2.buildDrawingCache();    			         
+            mLastScreemBitmap = Bitmap.createBitmap(h2.getDrawingCache());
+            h2.setDrawingCacheEnabled(false); 
+            //Log.d("Taurenlog","mLastScreemBitmap new");
+    	}
+    }
+	//[modify by Tauren 20120912 for ADW_00000008 end]
     @Override
     protected void dispatchDraw(Canvas canvas) {
         int saveCount = 0;
@@ -295,6 +371,27 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
         if (drawSelectorOnTop) {
             drawSelector(canvas);
         }
+		//[modify by Tauren 20120912 for ADW_00000008 start]
+        if(MMI_FEATURE_MAINMENU_LOOP_SLIDE){
+			//if(TOUCH_STATE_REST != mTouchState){
+				final View h=(View) getChildAt(1);
+				int lastPaine = this.getChildCount()-2;
+				//Log.d("Taurenlog","lastPaine:"+lastPaine+"  mCurrentScreen:"+mCurrentScreen);
+				//Log.d("Taurenlog","mScrollX:"+mScrollX);
+				if((0 == mCurrentScreen)&&(0 > mScrollX)){
+		            if(null != mLastScreemBitmap){
+		            	canvas.drawBitmap(mLastScreemBitmap, -mPageWidth, h.getTop(), mPaint);
+		            }				   
+	
+				}
+				else if((lastPaine == mCurrentScreen)&&(lastPaine*mPageWidth < mScrollX)) {			            
+	            if(null != mFirstScreemBitmap){
+	            	canvas.drawBitmap(mFirstScreemBitmap, mTotalScreens*mPageWidth, h.getTop(), mPaint);
+	            }
+			  //}
+			}
+        }
+		//[modify by Tauren 20120912 for ADW_00000008 end]
 
         if (clipToPadding) {
             canvas.restoreToCount(saveCount);
@@ -552,6 +649,11 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
             }
             // Remember where the motion event started
             mLastMotionX = x;
+        	//[modify by Tauren 20120912 for ADW_00000008 start]
+            if(MMI_FEATURE_MAINMENU_LOOP_SLIDE){
+            	fillerLoopSlideBitmap();
+            }
+         //[modify by Tauren 20120912 for ADW_00000008 end]
             break;
         case MotionEvent.ACTION_MOVE:
         	if (mTouchState == TOUCH_STATE_SCROLLING || mTouchState == TOUCH_STATE_DOWN) {
@@ -560,17 +662,36 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
                 if(Math.abs(deltaX)>mTouchSlop || mTouchState == TOUCH_STATE_SCROLLING){
                 	mTouchState = TOUCH_STATE_SCROLLING;
 	                mLastMotionX = x;
-
-	                if (deltaX < 0) {
-	                    if (getScrollX() > -mScrollingBounce) {
-	                        scrollBy(Math.min(deltaX,mScrollingBounce), 0);
-	                    }
-	                } else if (deltaX > 0) {
-	                	final int availableToScroll = ((mTotalScreens)*mPageWidth)-getScrollX()-mPageWidth+mScrollingBounce;
-	                	if (availableToScroll > 0) {
-	                        scrollBy(deltaX, 0);
-	                    }
+	                //[modify by Tauren 20120912 for ADW_00000008 start]
+	                if(MMI_FEATURE_MAINMENU_LOOP_SLIDE){
+	                	if(deltaX < 0){
+	                		mIsSlideLeft = true;
+	                		mIsSlideRight = false;
+	                	}
+	                	else if (deltaX > 0) {
+	                		mIsSlideLeft = false;
+	                		mIsSlideRight = true;
+	                	}
+	                	else{
+	                		mIsSlideLeft = false;
+	                		mIsSlideRight = false;
+	                	}
+	                	scrollBy(deltaX, 0);
+	                	invalidate();
 	                }
+	                else{
+		                if (deltaX < 0) {
+		                    if (getScrollX() > -mScrollingBounce) {
+		                        scrollBy(Math.min(deltaX,mScrollingBounce), 0);
+		                    }
+		                } else if (deltaX > 0) {
+		                	final int availableToScroll = ((mTotalScreens)*mPageWidth)-getScrollX()-mPageWidth+mScrollingBounce;
+		                	if (availableToScroll > 0) {
+		                        scrollBy(deltaX, 0);
+		                    }
+		                }
+	                }
+	                //[modify by Tauren 20120912 for ADW_00000008 end]
                 }
                 final int deltaY = (int) (mLastMotionY - y);
                 if(Math.abs(deltaY)>mTouchSlop || mTouchState == TOUCH_STATE_SCROLLING){
@@ -597,6 +718,14 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
                     // Fling hard enough to move right
                 	//snapToScreen(destinationScreen);
                 	snapToScreen(mCurrentScreen+1);
+                //[modify by Tauren 20120912 for ADW_00000008 start]
+                }else if(velocityX > SNAP_VELOCITY && mCurrentScreen == 0){
+                	//snapToScreen(mTotalScreens - 1);
+                	snapLoopToLastScreen();
+                }else if(velocityX < -SNAP_VELOCITY && mCurrentScreen == (mTotalScreens - 1)){
+                	//snapToScreen(0);
+                	snapLoopToFirstScreen();
+                //[modify by Tauren 20120912 for ADW_00000008 end]
                 } else {
                     snapToDestination();
                 }
@@ -665,6 +794,7 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
 
         return true;
     }
+    
     public void onTouchModeChanged(boolean isInTouchMode) {
         if (isInTouchMode) {
             // Get rid of the selection when we enter touch mode
@@ -925,6 +1055,50 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
         final int whichScreen = (getScrollX() + (screenWidth / 2)) / screenWidth;
         snapToScreen(whichScreen);
     }
+	//[modify by Tauren 20120912 for ADW_00000008 start]
+    private void snapLoopToLastScreen(){
+    	int whichScreen = mTotalScreens-1;
+    	
+        if (!mScroller.isFinished()){
+        	return;
+        }
+
+        mNextScreen=whichScreen;
+        mLayoutMode=LAYOUT_SCROLLING;
+        
+        View focusedChild = getFocusedChild();
+        if (focusedChild != null && focusedChild == getChildAt(mCurrentHolder)) {
+            focusedChild.clearFocus();
+        }
+
+		final int duration = mScrollingSpeed + 1;
+        final int delta = getScrollX() + mPageWidth;
+        mScroller.startScroll(getScrollX(), 0, -delta, 0, duration);
+        //Log.d("Taurenlog","getScrollX():"+getScrollX()+"  delta:"+delta);
+        invalidate();
+	}
+    private void snapLoopToFirstScreen(){
+    	int whichScreen = 0;
+    	
+        if (!mScroller.isFinished()){
+        	return;
+        }
+
+        mNextScreen=whichScreen;
+        mLayoutMode=LAYOUT_SCROLLING;
+        
+        View focusedChild = getFocusedChild();
+        if (focusedChild != null && focusedChild == getChildAt(mCurrentHolder)) {
+            focusedChild.clearFocus();
+        }
+
+		final int duration = mScrollingSpeed + 1;
+        final int delta = mTotalScreens * mPageWidth - getScrollX();
+        mScroller.startScroll(getScrollX(), 0, delta, 0, duration);
+        //Log.d("Taurenlog","getScrollX():"+getScrollX()+"  delta:"+delta);
+        invalidate();
+	}
+	//[modify by Tauren 20120912 for ADW_00000008 end]
 
     void snapToScreen(int whichScreen) {
         if (!mScroller.isFinished()) return;
