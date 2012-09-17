@@ -447,6 +447,10 @@ public final class AlmostNexusSettingsHelper {
 	    editor.commit();
 	}
 	public static boolean shouldShowChangelog(Context context) {
+//[add by Tauren 20120914 for ADW_00000009 start]
+return false;
+/*
+//[add by Tauren 20120914 for ADW_00000009 end]
 		Boolean config=context.getResources().getBoolean(R.bool.config_nagScreen);
 		if(config){
 			SharedPreferences sp = context.getSharedPreferences(ALMOSTNEXUS_PREFERENCES, Context.MODE_PRIVATE);
@@ -461,6 +465,9 @@ public final class AlmostNexusSettingsHelper {
 		}else{
 			return false;
 		}
+//[add by Tauren 20120914 for ADW_00000009 start]
+*/
+//[add by Tauren 20120914 for ADW_00000009 end]
 	}
 	/**
 	 * Creates the "changes" dialog to be shown when updating ADW.
