@@ -473,6 +473,10 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
 			else if(pageNum > (mTotalScreens-1)){
 				pageNum = 0;
 			}
+
+	    	if(pageNum<0 || pageNum>mTotalScreens-1){
+	    		return;
+	    	}
         }
         else{
 	    	if(pageNum<0 || pageNum>mTotalScreens-1){
