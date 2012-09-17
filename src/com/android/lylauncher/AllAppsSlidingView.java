@@ -254,13 +254,15 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
 		mPager.setLeft(l);
         if(mLayoutMode==LAYOUT_SCROLLING){
 			final int screenWidth = mPageWidth;
-	        final int whichScreen = (getScrollX() + (screenWidth / 2)) / screenWidth;
+	         int whichScreen = (getScrollX() + (screenWidth / 2)) / screenWidth;
 	      //[modify by Tauren 20120912 for ADW_00000008 start]
+	        
 	        if((0 == mCurrentScreen)&&((mTotalScreens-1) == mNextScreen)
         			||((mTotalScreens-1) == mCurrentScreen)&&(0 == mNextScreen)){
-	        	mScrollToScreen=mNextScreen;
-	        	mPager.setCurrentItem(whichScreen);
-	        	return;
+	        	//mScrollToScreen=mNextScreen;
+	        	//mPager.setCurrentItem(whichScreen);
+	        	//return;
+	        	whichScreen = mNextScreen;
 	        }
 	      //[modify by Tauren 20120912 for ADW_00000008 end]
 	        if(whichScreen!=mScrollToScreen){
@@ -308,6 +310,7 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
         int lastPaine = mTotalScreens - 1;
         //Log.d("Taurenlog","lastPaine:"+lastPaine);
     	for(int i=1;i<getChildCount();i++){
+    		Log.d("Taurenlog","getChildAt(i).getTag():"+getChildAt(i).getTag());
     		if(getChildAt(i).getTag().equals(0)){
     			h = (View) getChildAt(i);
     			//Log.d("Taurenlog","h:"+i);
@@ -316,9 +319,9 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
     			h2 = (View) getChildAt(i);
     			//Log.d("Taurenlog","h2:"+i);
     		}
-    		if((null != h) && (null != h2)){
-    			break;
-    		}
+    		//if((null != h) && (null != h2)){
+    		//	break;
+    		//}
     	}
     	
 		
@@ -438,9 +441,23 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
         	}
         }
     	detachViewsFromParent(1, getChildCount());
-		makePage(mCurrentScreen-1);
-		makePage(mCurrentScreen);
-		makePage(mCurrentScreen+1);
+    	//[modify by Tauren 20120912 for ADW_00000008 start]
+    	if(MMI_FEATURE_MAINMENU_LOOP_SLIDE){
+	    	if(2 == mTotalScreens){
+				makePage(0);
+				makePage(1); 		
+	    	}else
+	    	{
+				makePage(mCurrentScreen-1);
+				makePage(mCurrentScreen);
+				makePage(mCurrentScreen+1);
+			}
+    	}else{
+    		makePage(mCurrentScreen-1);
+			makePage(mCurrentScreen);
+			makePage(mCurrentScreen+1);
+    	}
+    	//[modify by Tauren 20120912 for ADW_00000008 end]
         requestFocus();
         setFocusable(true);
         mDataChanged = false;
@@ -448,9 +465,22 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
         findCurrentHolder();
     }
     public void makePage(int pageNum) {
-    	if(pageNum<0 || pageNum>mTotalScreens-1){
-    		return;
-    	}
+        //[modify by Tauren 20120912 for ADW_00000008 start]
+        if(MMI_FEATURE_MAINMENU_LOOP_SLIDE){
+			if(pageNum < 0){
+				pageNum = mTotalScreens-1;
+			}
+			else if(pageNum > (mTotalScreens-1)){
+				pageNum = 0;
+			}
+        }
+        else{
+	    	if(pageNum<0 || pageNum>mTotalScreens-1){
+	    		return;
+	    	}
+        }
+        //Log.d("Taurenlog","makePage pageNum:"+pageNum); 
+       //[modify by Tauren 20120912 for ADW_00000008 end]
     	final int pageSpacing = pageNum*mPageWidth;
         final int startPos=pageNum*mNumColumns*mNumRows;
 
@@ -522,6 +552,43 @@ public class AllAppsSlidingView extends AdapterView<ApplicationsAdapter> impleme
     		addPage=next+1;
     		removePage=current-1;
     	}
+    	 //[add by Tauren 20120912 for ADW_00000008 start]
+        if(MMI_FEATURE_MAINMENU_LOOP_SLIDE){
+	    	if(2 == mTotalScreens){
+	    		return;
+	    	}
+        	if((0 == current) && ((mTotalScreens-1) == next)){
+        		addPage = next - 1;
+        		removePage = current+1;
+        	}
+        	else if((0 == current) && (1 == next)){
+        		addPage = next + 1;
+        		removePage = (mTotalScreens-1);
+        	}
+        	else if((0 == next) && ((mTotalScreens-1) == current)){
+        		addPage = next + 1;
+        		removePage = current-1;
+        	}
+        	else if(((mTotalScreens-2) == next) && ((mTotalScreens-1) == current)){
+        		addPage = next - 1;
+        		removePage = 0;
+        	}
+        	
+        	if(addPage < 0){
+        		addPage = mTotalScreens-1;
+			}
+			else if(addPage > (mTotalScreens-1)){
+				addPage = 0;
+			}
+        	if(removePage < 0){
+        		removePage = mTotalScreens-1;
+			}
+			else if(removePage > (mTotalScreens-1)){
+				removePage = 0;
+			}
+        	//Log.d("Taurenlog","addRemovePages addPage:"+addPage+"  removePage:"+removePage);
+        }
+      //[add by Tauren 20120912 for ADW_00000008 end]
     	if(removePage>=0 && removePage<mTotalScreens){
     		HolderLayout h=null;
     		for(int i=1;i<getChildCount();i++){
